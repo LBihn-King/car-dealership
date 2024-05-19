@@ -49,6 +49,6 @@ public class Dealership {
 
     @Override
     public String toString() {
-        return "dealerName='" + dealerName + '|' + ", address='" + address + '|' + ", phone='" + phone + '|' + ", inventory=" + inventory;
+        return dealerName + '|' + address + '|' + phone + '|' + inventory;
     }
 }

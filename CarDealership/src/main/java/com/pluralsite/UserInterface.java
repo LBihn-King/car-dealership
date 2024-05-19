@@ -13,14 +13,13 @@ public class UserInterface {
 
     public void displayHome() {
         init(dealership);
-        System.out.println("Welcome to " + dealership.getDealerName() + "!");
-        displayOptions();
+        System.out.println("Welcome to " + dealership.getDealerName() + "!\nWhat would you like to do?");
+        options();
 
     }
 
-    public void displayOptions() {
+    public void options() {
         System.out.println("""
-                What would you like to do?
                 ----Options----
                 1) Search by price
                 2) Search by make and model
@@ -37,65 +36,153 @@ public class UserInterface {
 
     public void select() {
         int userInput = scanner.nextInt();
-        switch (userInput) {
-            case 1:
-                getByPriceRequest();
-                break;
-            case 2:
-                getByMakeModelRequest();
-                break;
-            case 3:
-                getByYearRequest();
-                break;
-            case 4:
-                getByColorRequest();
-                break;
-            case 5:
-                getByMileageRequest();
-                break;
-            case 6:
-                getByVehicleTypeRequest();
-                break;
-            case 7:
-                getAllVehiclesRequest();
-                break;
-            case 8:
-                addVehicleRequest();
-                break;
-            case 9:
-                removeVehicleRequest();
-                break;
-            case 0:
-                System.exit(0);
-                break;
+        try {
+            switch (userInput) {
+                case 1:
+                    getByPriceRequest();
+                    redirect();
+                    break;
+                case 2:
+                    scanner.nextLine();
+                    getByMakeModelRequest();
+                    redirect();
+                    break;
+                case 3:
+                    getByYearRequest();
+                    redirect();
+                    break;
+                case 4:
+                    scanner.nextLine();
+                    getByColorRequest();
+                    redirect();
+                    break;
+                case 5:
+                    getByMileageRequest();
+                    redirect();
+                    break;
+                case 6:
+                    scanner.nextLine();
+                    getByVehicleTypeRequest();
+                    redirect();
+                    break;
+                case 7:
+                    getAllVehiclesRequest();
+                    redirect();
+                    break;
+                case 8:
+                    addVehicleRequest();
+                    options();
+                    break;
+                case 9:
+                    removeVehicleRequest();
+                    options();
+                    break;
+                case 0:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid input");
+                    options();
+                    break;
+            }
+        } catch (Exception e) {
+            scanner.nextLine();
+            System.out.println("Invalid input");
+            options();
         }
+    }
 
+    public void redirect() {
+        try {
+            System.out.println("\n1) Continue\n0) exit");
+            int choice = scanner.nextInt();
+            if (choice == 1) {
+                options();
+            } else if (choice == 2) {
+                System.exit(0);
+            } else {
+                System.out.println("Invalid input");
+                redirect();
+            }
+        } catch (Exception exception) {
+            System.out.println("Invalid input");
+            redirect();
+        }
     }
 
 
 
     public void getByPriceRequest() {
-
+        System.out.println("Enter minimum price: ");
+        int min = scanner.nextInt();
+        System.out.println("Enter maximum price");
+        int max = scanner.nextInt();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            if (min <= vehicle.getPrice() && max >= vehicle.getPrice()) {
+                System.out.println(vehicle);
+            }
+        }
     }
 
     public void getByMakeModelRequest() {
-
+        System.out.println("Enter make: ");
+        String make = scanner.nextLine();
+        System.out.println("Enter model: ");
+        String model = scanner.nextLine();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            String term1 = vehicle.getMake();
+            String term2= vehicle.getModel();
+            if (term1.equalsIgnoreCase(make) && term2.equalsIgnoreCase(model)) {
+                System.out.println(vehicle);
+            }
+        }
     }
 
     public void getByYearRequest() {
-
+        System.out.println("Enter minimum year: ");
+        int min = scanner.nextInt();
+        System.out.println("Enter maximum year");
+        int max = scanner.nextInt();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            if (min <= vehicle.getYear() && max >= vehicle.getYear()) {
+                System.out.println(vehicle);
+            }
+        }
     }
 
     public void getByColorRequest() {
-
+        System.out.println("Enter color: ");
+        String search = scanner.nextLine();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            String output = vehicle.getColor();
+            if (output.equalsIgnoreCase(search)) {
+                System.out.println(vehicle);
+            }
+        }
     }
 
     public void getByMileageRequest() {
-
+        System.out.println("Enter minimum mileage: ");
+        int min = scanner.nextInt();
+        System.out.println("Enter max mileage");
+        int max = scanner.nextInt();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            if (min <= vehicle.getOdometer() && max >= vehicle.getOdometer()) {
+                System.out.println(vehicle);
+            }
+        }
     }
 
     public void getByVehicleTypeRequest() {
-
+        System.out.println("Enter vehicle type: ");
+        scanner.nextLine();
+        String search = scanner.nextLine();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            String output = vehicle.getVehicleType();
+            if (output.equalsIgnoreCase(search)) {
+                System.out.println(vehicle);
+            }
+        }
     }
 
     public void getAllVehiclesRequest() {
