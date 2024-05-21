@@ -1,12 +1,11 @@
 package com.pluralsite;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class DealershipFileManager {
     private ArrayList<Vehicle> vehicles = new ArrayList<>(); //create array list to hold vehicles
+    String dealer;
     public void getDealership(Dealership dealership) {
         parseDealership(dealership);
         parseVehicle();
@@ -16,8 +15,8 @@ public class DealershipFileManager {
     private void parseDealership(Dealership dealership) {
         try {
             BufferedReader bfr = new BufferedReader(new FileReader("inventory.csv"));
-            String input = bfr.readLine(); //read the first line of the file
-            String[] tokens = input.split("\\|");
+            dealer = bfr.readLine(); //read the first line of the file
+            String[] tokens = dealer.split("\\|");
             dealership.setDealerName(tokens[0]);// set dealer values
             dealership.setAddress(tokens[1]);
             dealership.setPhone(tokens[2]);
@@ -52,7 +51,17 @@ public class DealershipFileManager {
         }
     }
 
-    public void saveDealership(){
-
+    public void saveDealership(Dealership dealership){
+        try {
+            parseDealership(dealership);
+            BufferedWriter bufWrite = new BufferedWriter(new FileWriter("inventory.csv"));
+            bufWrite.write(dealer + "\n");
+            for (Vehicle vehicle : dealership.getInventory()) {
+                bufWrite.write(String.valueOf(vehicle + "\n"));
+            }
+            bufWrite.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

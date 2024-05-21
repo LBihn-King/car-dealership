@@ -1,4 +1,3 @@
-import com.pluralsite.Dealership;
 import com.pluralsite.UserInterface;
 
 public class Program {

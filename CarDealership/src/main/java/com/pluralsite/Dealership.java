@@ -47,8 +47,16 @@ public class Dealership {
         this.inventory = inventory;
     }
 
+    public void addVehicle(Vehicle vehicle) {
+        inventory.add(vehicle);
+    }
+
+    public void removeVehicle(Vehicle vehicle) {
+        inventory.remove(vehicle);
+    }
+
     @Override
     public String toString() {
-        return dealerName + '|' + address + '|' + phone + '|' + inventory;
+        return dealerName + '|' + address + '|' + phone + '|' + inventory + "\n";
     }
 }

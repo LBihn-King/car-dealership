@@ -6,6 +6,8 @@ import java.util.Scanner;
 public class UserInterface {
     private final Scanner scanner = new Scanner(System.in);
     Dealership dealership = new Dealership();
+    Vehicle vehicle = new Vehicle();
+
     private void init(Dealership dealership) {
         DealershipFileManager dfm = new DealershipFileManager();
         dfm.getDealership(dealership);
@@ -30,13 +32,14 @@ public class UserInterface {
                 7) List all vehicles
                 8) Add vehicle
                 9) Remove vehicle
-                0) Exit""");
+                10) Save to file
+                0) Exit program""");
         select();
     }
 
     public void select() {
-        int userInput = scanner.nextInt();
         try {
+            int userInput = scanner.nextInt();
             switch (userInput) {
                 case 1:
                     getByPriceRequest();
@@ -71,15 +74,17 @@ public class UserInterface {
                     break;
                 case 8:
                     addVehicleRequest();
-                    options();
+                    save();
                     break;
                 case 9:
                     removeVehicleRequest();
-                    options();
+                    save();
+                    break;
+                case 10:
+                    save();
                     break;
                 case 0:
-                    System.exit(0);
-                    break;
+                    closeProgram();
                 default:
                     System.out.println("Invalid input");
                     options();
@@ -98,8 +103,8 @@ public class UserInterface {
             int choice = scanner.nextInt();
             if (choice == 1) {
                 options();
-            } else if (choice == 2) {
-                System.exit(0);
+            } else if (choice == 0) {
+                closeProgram();
             } else {
                 System.out.println("Invalid input");
                 redirect();
@@ -110,6 +115,26 @@ public class UserInterface {
         }
     }
 
+    public void save() {
+        DealershipFileManager dealershipFileManager = new DealershipFileManager();
+        try {
+            System.out.println("Save?");
+            System.out.println("\n1) Save and continue\n2) Continue without saving");
+            int choice = scanner.nextInt();
+            if (choice == 1) {
+                dealershipFileManager.saveDealership(dealership);
+                options();
+            } else if (choice == 2) {
+                options();
+            } else {
+                System.out.println("Invalid input");
+                save();
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+            save();
+        }
+    }
 
 
     public void getByPriceRequest() {
@@ -131,7 +156,7 @@ public class UserInterface {
         String model = scanner.nextLine();
         for (Vehicle vehicle : dealership.getInventory()) {
             String term1 = vehicle.getMake();
-            String term2= vehicle.getModel();
+            String term2 = vehicle.getModel();
             if (term1.equalsIgnoreCase(make) && term2.equalsIgnoreCase(model)) {
                 System.out.println(vehicle);
             }
@@ -195,10 +220,51 @@ public class UserInterface {
     }
 
     public void addVehicleRequest() {
-
+        try {
+            System.out.println("Enter values:");
+            System.out.print("Vin: ");
+            vehicle.setVin(scanner.nextInt());
+            System.out.print("Year: ");
+            vehicle.setYear(scanner.nextInt());
+            System.out.print("Make: ");
+            scanner.nextLine();
+            vehicle.setMake(scanner.nextLine());
+            System.out.print("Model: ");
+            vehicle.setModel(scanner.nextLine());
+            System.out.print("Vehicle type: ");
+            vehicle.setVehicleType(scanner.nextLine());
+            System.out.print("Color: ");
+            vehicle.setColor(scanner.nextLine());
+            System.out.print("Mileage: ");
+            vehicle.setOdometer(scanner.nextInt());
+            System.out.print("Price: ");
+            vehicle.setPrice(scanner.nextDouble());
+            dealership.addVehicle(vehicle);
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+            addVehicleRequest();
+        }
     }
 
     public void removeVehicleRequest() {
+        try {
+            getAllVehiclesRequest();
+            System.out.println("\nEnter vin of the vehicle you would like to remove:");
+            int choice = scanner.nextInt();
+            for (Vehicle vehicle : dealership.getInventory()) {
+                if (choice == vehicle.getVin()) {
+                    dealership.removeVehicle(vehicle);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+            removeVehicleRequest();
+        }
+    }
 
+    public void closeProgram() {
+        System.out.println("Goodbye");
+        System.exit(0);
     }
 }
